@@ -3,14 +3,13 @@ package Gruppe11.RoskildeApp;
 import Objects.User;
 import Service.FirebaseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.concurrent.ExecutionException;
 
 @RestController
 public class UserController {
 
-    @Autowired
     private FirebaseService firebaseService;
 
     @GetMapping("/getUser")

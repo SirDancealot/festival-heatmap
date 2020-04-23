@@ -32,3 +32,4 @@ build/
 
 ### servicekey for Google cloud ###
 serviceKey.json
+/serviceAccountKey.json
