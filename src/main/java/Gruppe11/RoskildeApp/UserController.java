@@ -1,4 +1,4 @@
-package Controller;
+package Gruppe11.RoskildeApp;
 
 import Objects.User;
 import Service.FirebaseService;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-public class Usercontroller {
+public class UserController {
 
     @Autowired
     private FirebaseService firebaseService;
