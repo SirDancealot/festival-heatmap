@@ -4,3 +4,4 @@
 - Setup WebPage
 - Setup REST-Service
 - Setup Desktop-app
+- Login (OAuth)
