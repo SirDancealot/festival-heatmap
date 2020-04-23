@@ -1,12 +1,16 @@
 [submodule "festival-app"]
 	path = festival-app
 	url = https://github.com/SirDancealot/festival-app.git
+	branch = master
 [submodule "festival-desktop-app"]
 	path = festival-desktop-app
 	url = https://github.com/SirDancealot/festival-desktop-app.git
+	branch = master
 [submodule "festival-web-page"]
 	path = festival-web-page
 	url = https://github.com/SirDancealot/festival-web-page.git
+	branch = master
 [submodule "festival-rest-service"]
 	path = festival-rest-service
 	url = https://github.com/Andi365/festival-rest-service.git
+	branch = master
