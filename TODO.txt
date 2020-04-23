@@ -1,0 +1,6 @@
+- Setup Database
+- Setup App
+	- Design app
+- Setup WebPage
+- Setup REST-Service
+- Setup Desktop-app
