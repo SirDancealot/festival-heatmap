@@ -1,26 +1,26 @@
 package Gruppe11.RoskildeApp;
 
+import Objects.RequestUser;
 import Objects.User;
 import Service.FirebaseService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.google.cloud.firestore.GeoPoint;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.concurrent.ExecutionException;
 
 @RestController
 public class UserController {
 
-    private FirebaseService firebaseService;
-
     @GetMapping("/getUser")
-    public String getUser(@RequestHeader String name) {
-        User usr = new User("bund",133,133);
-        return usr.getName();
+    public String getUser(@RequestHeader String name) throws ExecutionException, InterruptedException {
+        FirebaseService firebaseService = FirebaseService.getInstance();
+        return firebaseService.getUserDetails(name);
     }
 
     @PostMapping("/createUser")
-    public String createUser(@RequestBody User user) throws ExecutionException, InterruptedException {
+    public String createUser(@RequestBody RequestUser requestUser) throws ExecutionException, InterruptedException {
+        FirebaseService firebaseService = FirebaseService.getInstance();
+        User user = new User(requestUser.getName(),new GeoPoint(requestUser.getLatitude(),requestUser.getLongitude()));
         return firebaseService.saveUserDetails(user);
     }
-
 }

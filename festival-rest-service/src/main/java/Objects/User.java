@@ -1,17 +1,18 @@
 package Objects;
 
+import com.google.cloud.firestore.GeoPoint;
+import org.elasticsearch.index.search.geo.GeoHashUtils;
+import org.springframework.stereotype.Component;
+
+@Component
 public class User {
     private String name;
-    private int latitude, longitude;
+    private GeoPoint coordinates;
+    private String geohash;
 
-    public User() {
-        super();
-    }
-
-    public User(String name, int latitude, int longitude) {
+    public User(String name, GeoPoint coordinates) {
         this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        setL(coordinates);
     }
 
     public String getName() {
@@ -22,19 +23,17 @@ public class User {
         this.name = name;
     }
 
-    public int getLatitude() {
-        return latitude;
+    public String getG() {
+        return geohash;
     }
-
-    public void setLatitude(int latitude) {
-        this.latitude = latitude;
+    public void setG(String g) {
+        this.geohash = g;
     }
-
-    public int getLongitude() {
-        return longitude;
+    public GeoPoint getL() {
+        return coordinates;
     }
-
-    public void setLongitude(int longitude) {
-        this.longitude = longitude;
+    public void setL(GeoPoint l) {
+        this.coordinates = l;
+        geohash = GeoHashUtils.encode(coordinates.getLatitude(),coordinates.getLongitude());
     }
 }
