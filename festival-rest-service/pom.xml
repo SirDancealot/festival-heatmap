@@ -18,20 +18,16 @@
 		<java.version>1.8</java.version>
 	</properties>
 
-	<dependencies>
-
+		<dependencies>
 		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-oauth2-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-oauth2-jose</artifactId>
+		<groupId>org.springframework.security</groupId>
+		<artifactId>spring-security-web</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
 		<dependency>
-			<groupId>org.springframework.security.oauth.boot</groupId>
-			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
 		</dependency>
 
 		<dependency>
@@ -89,6 +85,11 @@
 			<artifactId>google-services</artifactId>
 			<version>3.0.0</version>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
+			<version>2.2.5.RELEASE</version>
 		</dependency>
 
 	</dependencies>
