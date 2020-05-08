@@ -1,7 +1,6 @@
-- Setup Database
+- Finish Database setup
 - Setup App
-	- Design app
 - Setup WebPage
-- Setup REST-Service
+- Initial REST-service done - need more configuration
 - Setup Desktop-app
-- Login (OAuth)
+- Finalize Login (OAuth)
