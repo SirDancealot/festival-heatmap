@@ -26,8 +26,8 @@ public class UserController {
 
 
     @ResponseBody
-    @GetMapping ("/saveUser")
-    public Object createUser(/*@RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude*/) throws ExecutionException, InterruptedException {
+    @PostMapping ("/saveUser")
+    public Object createUser(@RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude) throws ExecutionException, InterruptedException {
 
        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
        // if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -39,10 +39,10 @@ public class UserController {
 
             // if email is found save it in database with geoCords
             if (m.find()) {
-                User user = new User(m.group());
+                //User user = new User(m.group());
 
                 //TODO test POST request with geoCords
-                // User user = new User(m.group(), new GeoPoint(latitude,longitude));
+                User user = new User(m.group(), new GeoPoint(latitude,longitude));
                 FirebaseService firebaseService = FirebaseService.getInstance();
                 firebaseService.saveUserDetails(user);
 
@@ -58,7 +58,6 @@ public class UserController {
     //TODO Get all user geoLocs from db and save them in a list
     @GetMapping("/allUsers")
     public void showUser(){
-
 
     }
 
