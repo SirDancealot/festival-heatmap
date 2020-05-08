@@ -1,4 +1,5 @@
 package Security;
+/*
 
 
 import org.springframework.context.annotation.Bean;
@@ -14,10 +15,7 @@ public class ValidationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/","/login**","/error**").permitAll()
-                .anyRequest().authenticated().and().oauth2Login()
-                .defaultSuccessUrl("/showUser")
-                .failureUrl("/");
-
+        http.authorizeRequests().anyRequest().authenticated().and().oauth2Login();
     }
 }
+*/

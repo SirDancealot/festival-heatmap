@@ -6,9 +6,9 @@ import Service.FirebaseService;
 import com.google.cloud.firestore.GeoPoint;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
+/*import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;*/
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.ExecutionException;
@@ -19,21 +19,21 @@ import java.util.regex.Pattern;
 public class UserController {
 
     @GetMapping("/getUser")
-    public String getUser(@RequestHeader String name) throws ExecutionException, InterruptedException {
+    public String getUser(/*@RequestHeader String name*/) throws ExecutionException, InterruptedException {
         FirebaseService firebaseService = FirebaseService.getInstance();
-        return firebaseService.getUserDetails(name);
+        return "bund";
     }
 
+
     @ResponseBody
-    @PostMapping ("/saveUser")
-    public Object createUser(@RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude) throws ExecutionException, InterruptedException {
+    @GetMapping ("/saveUser")
+    public Object createUser(/*@RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude*/) throws ExecutionException, InterruptedException {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+       // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+       // if (!(authentication instanceof AnonymousAuthenticationToken)) {
 
             // get details from logged in user and regex match the email
-            String name = authentication.getPrincipal().toString();
+            String name = "harcdodedemail@email.com";
             Pattern p = Pattern.compile("[a-zA-Z0-9-_.]+@[a-zA-Z0-9-_.]+");
             Matcher m = p.matcher(name);
 
@@ -50,7 +50,7 @@ public class UserController {
                 // return HTTP response status 200
                 return new ResponseEntity(HttpStatus.OK);
             }
-        }
+
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
@@ -58,6 +58,8 @@ public class UserController {
     //TODO Get all user geoLocs from db and save them in a list
     @GetMapping("/allUsers")
     public void showUser(){
+
+
     }
 
     //TODO update a users geoLoc - search the db for the user's email and update the geolocs

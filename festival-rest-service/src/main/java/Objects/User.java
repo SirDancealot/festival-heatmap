@@ -1,7 +1,7 @@
 package Objects;
 
 import com.google.cloud.firestore.GeoPoint;
-//import org.elasticsearch.index.search.geo.GeoHashUtils;
+import org.elasticsearch.index.search.geo.GeoHashUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -38,6 +38,6 @@ public class User {
     }
     public void setL(GeoPoint l) {
         this.coordinates = l;
-        //geohash = GeoHashUtils.encode(coordinates.getLatitude(),coordinates.getLongitude());
+        geohash = GeoHashUtils.encode(coordinates.getLatitude(),coordinates.getLongitude());
     }
 }
