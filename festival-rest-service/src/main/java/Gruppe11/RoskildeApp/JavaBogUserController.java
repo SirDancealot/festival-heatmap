@@ -13,15 +13,12 @@ import java.rmi.RemoteException;
 @RestController
 public class JavaBogUserController {
 
-
-    private Brugeradmin ba;
-
     @PostMapping("/javaboglogin")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity validateUser(@RequestParam("name") String name,
                                        @RequestParam("password") String password) throws RemoteException, NotBoundException, MalformedURLException {
 
-        ba = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
+        Brugeradmin ba = (Brugeradmin) Naming.lookup("rmi://javabog.dk/brugeradmin");
 
         try {
 
