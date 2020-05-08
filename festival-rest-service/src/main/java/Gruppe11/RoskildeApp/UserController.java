@@ -75,7 +75,6 @@ public class UserController {
      * @param longitude
      * @return HTTP statuscode
      */
-    //TODO: check if mail adress exist
     @PostMapping("/updateUser")
     public Object updateUserLoc(@RequestParam("email") String email, @RequestParam ("latitude") Double latitude, @RequestParam("longitude") Double longitude) throws ExecutionException, InterruptedException {
         FirebaseService firebaseService = FirebaseService.getInstance();
