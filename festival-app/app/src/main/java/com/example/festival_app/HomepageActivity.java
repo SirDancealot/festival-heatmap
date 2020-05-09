@@ -1,5 +1,6 @@
 package com.example.festival_app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,7 +36,7 @@ public class HomepageActivity extends AppCompatActivity implements View.OnClickL
 
         if(v.getId()==SeeHeatMap.getId()){
 
-
+            startActivity(new Intent(HomepageActivity.this, HeatMapActivity.class));
 
         } else if (v.getId()==RegisterOnHeatMap.getId()){
 
