@@ -54,7 +54,7 @@ public class GoogleLoginActivity extends AppCompatActivity {
         try {
             account = completedTask.getResult(ApiException.class);
 
-            startActivity(new Intent(getApplicationContext(),HomepageActivity.class));
+            startActivity(new Intent(getApplicationContext(),HeatMapActivity.class));
 
             // Signed in successfully, show authenticated UI.
         } catch (ApiException e) {
