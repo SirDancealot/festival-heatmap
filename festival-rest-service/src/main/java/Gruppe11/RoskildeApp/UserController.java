@@ -10,6 +10,9 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.cloud.firestore.GeoPoint;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.type.LatLng;
 import org.elasticsearch.index.search.geo.GeoHashUtils;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
@@ -31,14 +35,29 @@ import java.util.regex.Pattern;
 @RestController
 public class UserController {
 
+    @PostMapping ("/logintest")
+    public Object test(@RequestParam ("token") String token) throws ExecutionException, InterruptedException {
+        try {
+
+            // Validate en token
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+
+            // Få en email
+            decodedToken.getEmail();
+
+            return new ResponseEntity(HttpStatus.OK);
+
+        } catch (FirebaseAuthException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+    }
 
 
     @ResponseBody
     @PostMapping ("/saveUser")
     public Object createUser(@RequestParam("token") String token, @RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude) throws ExecutionException, InterruptedException {
 
-        HttpTransport transport = new NetHttpTransport();
-        JsonFactory jsonFactory = new JacksonFactory();
 
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport,jsonFactory).
                 setAudience(Collections.singletonList("323786655673-drp7qhjh87inj687gn9qhrr5lnugstg8.apps.googleusercontent.com")).build();
