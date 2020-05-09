@@ -54,7 +54,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(new Intent(ProfileActivity.this, HeatMapActivity.class));
 
         }
-
     }
 
     public class JsonTask extends AsyncTask<String,String, Void> {

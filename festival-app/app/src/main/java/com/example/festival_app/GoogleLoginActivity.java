@@ -3,6 +3,7 @@ package com.example.festival_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 public class GoogleLoginActivity extends AppCompatActivity {
 
     GoogleSignInAccount account;
+    private UserInformation user;
 
 
 
@@ -24,6 +26,8 @@ public class GoogleLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_login);
+
+        user = UserInformation.getInstance();
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -33,8 +37,6 @@ public class GoogleLoginActivity extends AppCompatActivity {
 
         Intent intent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(intent,1);
-
-
 
     }
 
@@ -53,6 +55,13 @@ public class GoogleLoginActivity extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             account = completedTask.getResult(ApiException.class);
+
+            if (account != null) {
+                user.setUserEmail(account.getEmail());
+                user.setAccess_type("google");
+                user.setToken(account.getIdToken());
+                Toast.makeText(getApplicationContext(),user.toString(),Toast.LENGTH_LONG).show();
+            }
 
             startActivity(new Intent(getApplicationContext(),HeatMapActivity.class));
 
