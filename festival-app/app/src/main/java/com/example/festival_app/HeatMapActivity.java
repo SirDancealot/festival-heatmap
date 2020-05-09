@@ -1,17 +1,24 @@
 package com.example.festival_app;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.fragment.app.FragmentActivity;
 
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
@@ -33,22 +40,32 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnMapClickListener {
 
-    GoogleMap map;
+     private GoogleMap mMap;
 
     HeatmapTileProvider mProvider;
     TileOverlay mOverlay;
+    SupportMapFragment mapFragment;
+
+    private Marker mMark;
+
+    Button profile, setLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        profile = findViewById(R.id.button_profile);
+        profile.setOnClickListener(this);
+        setLocation = findViewById(R.id.button_set);
+        setLocation.setOnClickListener(this);
+
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        new JsonTask().execute("localhost");
+        new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
 
     }
 
@@ -56,11 +73,55 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        map = googleMap;
+        mMap = googleMap;
 
-        LatLng Maharashtra = new LatLng(19.169257, 73.341601);
-        map.addMarker(new MarkerOptions().position(Maharashtra).title("Maharashtra"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(Maharashtra));
+        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
+        float zoom = 16;
+        LatLng center = new LatLng(55.618310, 12.082911);
+        mMap.setOnMapClickListener(this);
+
+        LatLng ne = new LatLng(55.610050, 12.060702);
+        LatLng sw = new LatLng(55.624021, 12.096797);
+
+        LatLngBounds bound = new LatLngBounds(ne,sw);
+
+        mMap.setLatLngBoundsForCameraTarget(bound);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center, zoom));
+
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        if(view.getId() == profile.getId()){
+
+            startActivity(new Intent(HeatMapActivity.this, ProfileActivity.class));
+
+        } else if(view.getId() == setLocation.getId()){
+
+            //TODO SAVE LOCATION TO DB
+
+        }
+
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+
+        if(mMark == null){
+
+            mMark = mMap.addMarker(new MarkerOptions().position(latLng));
+
+        } else {
+
+            mMark.remove();
+
+            mMark = mMap.addMarker(new MarkerOptions().position(latLng));
+
+        }
+
     }
 
     public class JsonTask extends AsyncTask<String,String, List<LatLng>>{
@@ -71,7 +132,8 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
             BufferedReader reader = null;
 
             try {
-                URL url = new URL("localhost");
+                URL url = new URL(strings[0]);
+                connection = (HttpURLConnection) url.openConnection();
 
                 connection.connect();
 
@@ -121,7 +183,6 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
                         e.printStackTrace();
                     }
                 }
-
             }
 
             return null;
@@ -133,11 +194,10 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
 
             mProvider = new HeatmapTileProvider.Builder().data(s).build();
 
-            mOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+            mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
 
         }
     }
-
 }
 
 
