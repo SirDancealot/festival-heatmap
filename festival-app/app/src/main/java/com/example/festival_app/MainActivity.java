@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             if(true){
 
-                startActivity(new Intent(MainActivity.this, HomepageActivity.class));
+                startActivity(new Intent(MainActivity.this, HeatMapActivity.class));
 
             }
 
