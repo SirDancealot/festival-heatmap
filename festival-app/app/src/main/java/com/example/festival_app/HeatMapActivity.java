@@ -13,6 +13,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.data.geojson.GeoJsonPoint;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,13 +26,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     GoogleMap map;
+
+    HeatmapTileProvider mProvider;
+    TileOverlay mOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +63,10 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
         map.moveCamera(CameraUpdateFactory.newLatLng(Maharashtra));
     }
 
-    public class JsonTask extends AsyncTask<String,String,String>{
+    public class JsonTask extends AsyncTask<String,String, List<LatLng>>{
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected List<LatLng> doInBackground(String... strings) {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
 
@@ -80,13 +90,18 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
 
                 String final_Json = buf.toString();
 
-                JSONObject parentObject = new JSONObject();
-                JSONArray parentArray = parentObject.getJSONArray("");
-                JSONObject finalObject = parentArray.getJSONObject(0);
+                List<LatLng> list = new ArrayList<LatLng>();
 
-                String Coords = finalObject.getString("Coords");
+                JSONArray Coords = new JSONArray(final_Json);
 
-                return Coords+"\n";
+                for (int i = 0; i < Coords.length(); i++) {
+                    JSONObject object = Coords.getJSONObject(i);
+                    double lat = object.getDouble("lat");
+                    double lng = object.getDouble("lng");
+                    list.add(new LatLng(lat, lng));
+                }
+
+                return list;
 
 
             } catch (MalformedURLException e) {
@@ -112,7 +127,18 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
 
             return null;
         }
+
+        @Override
+        protected void onPostExecute(List<LatLng> s) {
+            super.onPostExecute(s);
+
+            mProvider = new HeatmapTileProvider.Builder().data(s).build();
+
+            mOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+
+        }
     }
+
 }
 
 
