@@ -1,9 +1,18 @@
 package Gruppe11.RoskildeApp;
 
+import Objects.Coordinates;
 import Objects.User;
-import Objects.RequestUser;
 import Service.FirebaseService;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.cloud.firestore.GeoPoint;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.type.LatLng;
+import org.elasticsearch.index.search.geo.GeoHashUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 /*import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -11,6 +20,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;*/
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,59 +31,97 @@ import java.util.regex.Pattern;
 @RestController
 public class UserController {
 
-    @GetMapping("/getUser")
-    public String getUser(/*@RequestHeader String name*/) throws ExecutionException, InterruptedException {
-        FirebaseService firebaseService = FirebaseService.getInstance();
-        return "bund";
-    }
 
 
     @ResponseBody
-    @GetMapping ("/saveUser")
-    public Object createUser(/*@RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude*/) throws ExecutionException, InterruptedException {
+    @PostMapping ("/saveUser")
+    public Object createUser(@RequestParam("token") String token, @RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude) throws ExecutionException, InterruptedException {
 
-       // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-       // if (!(authentication instanceof AnonymousAuthenticationToken)) {
+        HttpTransport transport = new NetHttpTransport();
+        JsonFactory jsonFactory = new JacksonFactory();
 
-            // get details from logged in user and regex match the email
-            String name = "harcdodedemail@email.com";
-            Pattern p = Pattern.compile("[a-zA-Z0-9-_.]+@[a-zA-Z0-9-_.]+");
-            Matcher m = p.matcher(name);
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport,jsonFactory).
+                setAudience(Collections.singletonList("323786655673-drp7qhjh87inj687gn9qhrr5lnugstg8.apps.googleusercontent.com")).build();
 
-            // if email is found save it in database with geoCords
-            if (m.find()) {
-                User user = new User(m.group());
+        try {
+            GoogleIdToken idToken = verifier.verify(token);
 
-                //TODO test POST request with geoCords
-                // User user = new User(m.group(), new GeoPoint(latitude,longitude));
+            if (idToken != null){
+                GoogleIdToken.Payload payload = idToken.getPayload();
+                System.out.println(payload.toString());
+
                 FirebaseService firebaseService = FirebaseService.getInstance();
+                User user = new User(payload.getEmail(),new GeoPoint(latitude,longitude));
                 firebaseService.saveUserDetails(user);
 
-
-                // return HTTP response status 200
                 return new ResponseEntity(HttpStatus.OK);
+            }else {
+                return new ResponseEntity(HttpStatus.FORBIDDEN);
             }
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+    }
 
+    @GetMapping("/allGeolocs")
+    public ArrayList<String> showUser() throws ExecutionException, InterruptedException {
+        FirebaseService firebaseService = FirebaseService.getInstance();
+        return firebaseService.getGeoPoints();
+    }
+
+    @GetMapping("/locationSeperate")
+    public ArrayList<Coordinates> getCoordinates() throws ExecutionException, InterruptedException, InvalidProtocolBufferException {
+        FirebaseService firebaseService = FirebaseService.getInstance();
+        ArrayList<Coordinates> geoPoints = new ArrayList<>();
+        ArrayList<String> geohash = firebaseService.getGeoPoints();
+        for (int i = 0; i < geohash.size(); i++) {
+            double[] d = GeoHashUtils.decode(geohash.get(i));
+            geoPoints.add(new Coordinates(d[0],d[1]));
+        }
+        return geoPoints;
+    }
+
+    /**
+     * Updates a users geohash
+     * @param email
+     * @param latitude
+     * @param longitude
+     * @return HTTP statuscode
+     */
+    @PostMapping("/updateUser")
+    public Object updateUserLoc(@RequestParam("email") String email, @RequestParam ("latitude") Double latitude, @RequestParam("longitude") Double longitude) throws ExecutionException, InterruptedException {
+        FirebaseService firebaseService = FirebaseService.getInstance();
+        if(firebaseService.getUserDetails(email)) {
+            try {
+                firebaseService.saveUserDetails(new User(email, new GeoPoint(latitude, longitude)));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new ResponseEntity(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity(HttpStatus.OK);
+        }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
-
-    //TODO Get all user geoLocs from db and save them in a list
-    @GetMapping("/allUsers")
-    public void showUser(){
-
-
-    }
-
-    //TODO update a users geoLoc - search the db for the user's email and update the geolocs
-    @PostMapping("/updateUser")
-    public void updateUserLoc(@RequestParam ("latitude") Double latitude, @RequestParam("longitude") Double longitude){
-
-    }
-
-    //TODO delete a user from the database with given email
+    /**
+     * Delete user upon given email
+     * @param email
+     * @return HTTP statuscode
+     */
     @DeleteMapping("/deleteUser")
-    public void deleteUser(@RequestParam ("email")String email){
-
+    public Object deleteUser(@RequestParam ("email") String email){
+        FirebaseService firebaseService = FirebaseService.getInstance();
+        try {
+            firebaseService.deleteUser(new User(email));
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
+
