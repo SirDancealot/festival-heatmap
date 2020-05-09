@@ -38,7 +38,7 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        new JsonTask().execute("localhost");
+        new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
 
     }
 
@@ -61,7 +61,8 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
             BufferedReader reader = null;
 
             try {
-                URL url = new URL("localhost");
+                URL url = new URL(strings[0]);
+                connection = (HttpURLConnection) url.openConnection();
 
                 connection.connect();
 
