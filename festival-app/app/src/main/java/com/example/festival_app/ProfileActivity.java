@@ -46,7 +46,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(new Intent(ProfileActivity.this, HeatMapActivity.class));
 
         }
-
     }
 }
 

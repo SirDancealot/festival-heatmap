@@ -3,26 +3,21 @@ package com.example.festival_app;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.fragment.app.FragmentActivity;
 
-
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.maps.android.data.geojson.GeoJsonPoint;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
 import org.json.JSONArray;
@@ -33,7 +28,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -163,7 +157,6 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
                 }
 
                 return list;
-
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
