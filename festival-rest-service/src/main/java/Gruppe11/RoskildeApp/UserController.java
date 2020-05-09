@@ -3,6 +3,12 @@ package Gruppe11.RoskildeApp;
 import Objects.Coordinates;
 import Objects.User;
 import Service.FirebaseService;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.cloud.firestore.GeoPoint;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.type.LatLng;
@@ -14,40 +20,48 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;*/
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RestController
 public class UserController {
+
+
+
     @ResponseBody
-    @GetMapping ("/saveUser")
-    public Object createUser(/*@RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude*/) throws ExecutionException, InterruptedException {
+    @PostMapping ("/saveUser")
+    public Object createUser(@RequestParam("token") String token, @RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude) throws ExecutionException, InterruptedException {
 
-       // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-       // if (!(authentication instanceof AnonymousAuthenticationToken)) {
+        HttpTransport transport = new NetHttpTransport();
+        JsonFactory jsonFactory = new JacksonFactory();
 
-            // get details from logged in user and regex match the email
-            String name = "harcdodedemail@email.com";
-            Pattern p = Pattern.compile("[a-zA-Z0-9-_.]+@[a-zA-Z0-9-_.]+");
-            Matcher m = p.matcher(name);
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport,jsonFactory).
+                setAudience(Collections.singletonList("323786655673-drp7qhjh87inj687gn9qhrr5lnugstg8.apps.googleusercontent.com")).build();
 
-            // if email is found save it in database with geoCords
-            if (m.find()) {
-                User user = new User(m.group());
+        try {
+            GoogleIdToken idToken = verifier.verify(token);
 
-                //TODO test POST request with geoCords
-                // User user = new User(m.group(), new GeoPoint(latitude,longitude));
+            if (idToken != null){
+                GoogleIdToken.Payload payload = idToken.getPayload();
+                System.out.println(payload.toString());
+
                 FirebaseService firebaseService = FirebaseService.getInstance();
+                User user = new User(payload.getEmail(),new GeoPoint(latitude,longitude));
                 firebaseService.saveUserDetails(user);
 
-
-                // return HTTP response status 200
                 return new ResponseEntity(HttpStatus.OK);
+            }else {
+                return new ResponseEntity(HttpStatus.FORBIDDEN);
             }
-
-        return new ResponseEntity(HttpStatus.NOT_FOUND);
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
     }
 
     @GetMapping("/allGeolocs")
