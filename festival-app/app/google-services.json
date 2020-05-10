@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "617122577401",
+    "firebase_url": "https://roskildeapp-4670e.firebaseio.com",
+    "project_id": "roskildeapp-4670e",
+    "storage_bucket": "roskildeapp-4670e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617122577401:android:7ff684ae56c4b9bc4a1b28",
+        "android_client_info": {
+          "package_name": "com.example.festival_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "617122577401-m55pskd035mii23pkn7l9d4s5qscb0kh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADRUAQ2VOLzwDKVjhCrAUS2xmDvcsRw4Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "617122577401-m55pskd035mii23pkn7l9d4s5qscb0kh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
