@@ -3,6 +3,7 @@ package com.example.festival_app;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 
@@ -153,9 +154,18 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
                 makePostSaveUser(mUserInformation.getToken(), "" + mMark.getPosition().latitude, "" + mMark.getPosition().longitude);
             }
 
-            mMap.clear();
+            CountDownTimer time = new CountDownTimer(500,500) {
+                @Override
+                public void onTick(long l) {
 
-            new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
+                }
+
+                @Override
+                public void onFinish() {
+                    new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
+                }
+            }.start();
+
 
         }
 
@@ -246,6 +256,8 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
             super.onPostExecute(s);
 
             mProvider = new HeatmapTileProvider.Builder().data(s).build();
+
+            mMap.clear();
 
             mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
 
