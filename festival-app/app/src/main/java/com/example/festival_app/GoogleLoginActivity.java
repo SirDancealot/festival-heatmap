@@ -24,7 +24,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class GoogleLoginActivity extends AppCompatActivity {
 
-    GoogleSignInAccount account;
     private UserInformation mUserInformation;
     private FirebaseAuth mAuth;
     private Task<GoogleSignInAccount> loginTask;

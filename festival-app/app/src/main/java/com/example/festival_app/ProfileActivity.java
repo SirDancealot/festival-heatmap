@@ -58,8 +58,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null){
-            mUserInformation.setUserEmail(currentUser.getEmail());
-
             currentUser.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                 @Override
                 public void onComplete(@NonNull Task<GetTokenResult> task) {

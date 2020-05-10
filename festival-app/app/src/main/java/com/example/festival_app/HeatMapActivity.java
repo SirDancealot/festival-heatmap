@@ -89,9 +89,6 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         mapFragment.getMapAsync(this);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference();
-
         new JsonTask().execute("http://dist.saluton.dk:18512/locationSeperate");
     }
 
@@ -99,7 +96,6 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null){
-            mUserInformation.setUserEmail(currentUser.getEmail());
 
            currentUser.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                 @Override
