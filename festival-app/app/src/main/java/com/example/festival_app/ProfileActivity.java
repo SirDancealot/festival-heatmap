@@ -32,7 +32,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private FirebaseAuth mAuth;
     private UserInformation mUserInformation;
 
-    String BASE_URL = "http://10.0.2.2:8080";
+    String BASE_URL = "10.0.2.2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,8 +101,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json"),json);
 
-        HttpUrl uu = new HttpUrl.Builder().scheme("http").host("10.0.2.2").port(8080).addPathSegments("deleteUser").addQueryParameter("token", token).build();
-        System.out.println(uu);
+        HttpUrl uu = new HttpUrl.Builder()
+                .scheme("http")
+                .host(BASE_URL)
+                .port(8080)
+                .addPathSegments("deleteUser")
+                .addQueryParameter("token", token)
+                .build();
 
         Request req = new Request.Builder().url(uu).delete(body).build();
 
