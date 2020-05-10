@@ -84,9 +84,6 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference();
-
         new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
     }
 
@@ -125,7 +122,6 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
         LatLngBounds bound = new LatLngBounds(ne,sw);
 
         mMap.setLatLngBoundsForCameraTarget(bound);
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center, zoom));
 
     }
@@ -154,7 +150,6 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
                     new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
                 }
             }.start();
-
 
         }
 
