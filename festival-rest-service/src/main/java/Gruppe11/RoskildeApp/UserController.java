@@ -59,28 +59,20 @@ public class UserController {
     public Object createUser(@RequestParam("token") String token, @RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude) throws ExecutionException, InterruptedException {
 
 
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport,jsonFactory).
-                setAudience(Collections.singletonList("323786655673-drp7qhjh87inj687gn9qhrr5lnugstg8.apps.googleusercontent.com")).build();
-
         try {
-            GoogleIdToken idToken = verifier.verify(token);
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
 
-            if (idToken != null){
-                GoogleIdToken.Payload payload = idToken.getPayload();
-                System.out.println(payload.toString());
+            User user = new User(decodedToken.getEmail(),new GeoPoint(latitude,longitude));
+            FirebaseService firebaseService = FirebaseService.getInstance();
+            firebaseService.saveUserDetails(user);
 
-                FirebaseService firebaseService = FirebaseService.getInstance();
-                User user = new User(payload.getEmail(),new GeoPoint(latitude,longitude));
-                firebaseService.saveUserDetails(user);
+            return new ResponseEntity(HttpStatus.OK);
 
-                return new ResponseEntity(HttpStatus.OK);
-            }else {
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            }
-        } catch (GeneralSecurityException | IOException e) {
+        } catch (FirebaseAuthException e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
+
     }
 
     @GetMapping("/allGeolocs")
