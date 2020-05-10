@@ -1,7 +1,10 @@
 package Objects;
 
+import org.springframework.stereotype.Component;
+
 import java.io.Serializable;
 
+@Component
 public class Coordinates implements Serializable {
     double lat;
     double lng;
