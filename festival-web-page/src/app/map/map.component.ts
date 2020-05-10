@@ -25,7 +25,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   zoom = 14.5;
   center = { lat: 55.615304, lng: 12.081614 };
   options: google.maps.MapOptions = {
-    mapTypeId: 'roadmap',
+    mapTypeId: 'satellite',
     zoomControl: true,
     scrollwheel: true,
     disableDoubleClickZoom: true,
