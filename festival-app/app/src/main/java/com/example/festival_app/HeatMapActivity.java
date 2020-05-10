@@ -40,6 +40,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnMapClickListener {
 
      private GoogleMap mMap;
@@ -124,7 +132,7 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         } else if(view.getId() == setLocation.getId()){
 
-            //TODO SAVE LOCATION TO DB
+            makePostSaveUser(mUserInformation.getToken(),""+mMark.getPosition().latitude,""+mMark.getPosition().longitude);
 
         }
 
@@ -219,6 +227,37 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
             mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
 
         }
+    }
+
+    private void makePostSaveUser(String token, String lat, String lng) {
+
+        OkHttpClient client = new OkHttpClient();
+
+        String json = "{\"token\":\""+token+"\",\"latitude\":\""+lat+"\",\"longitude\":"+lng+"}\"";
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
+
+        Request request = new Request.Builder()
+                .url("http://10.0.2.2:8080/saveUser")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("Something went wrong");
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println(response.body().string());
+            }
+        });
     }
 }
 

@@ -1,7 +1,6 @@
 package com.example.festival_app;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,11 +15,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -78,9 +75,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         if(view.getId()==delete.getId()){
 
-            makePost();
-
-            //TODO instert email of user to be deleted
+            makePostDeleteUser(mUserInformation.getToken());
 
         } else if(view.getId()==logout.getId()){
            FirebaseAuth.getInstance().signOut();
@@ -94,49 +89,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    public class JsonTask extends AsyncTask<String, String, Void> {
-
-        @Override
-        protected Void doInBackground(String... strings) {
-            HttpURLConnection connection = null;
-
-            OkHttpClient client = new OkHttpClient();
-
-            RequestBody fromBody = new FormBody.Builder()
-                    .add("token", mUserInformation.getToken())
-                    .build();
-
-            Request request = new Request.Builder()
-                    .url(BASE_URL+"/deleteUser")
-                    .post(fromBody)
-                    .build();
-
-            Call call = client.newCall(request);
-
-
-            return null;
-        }
-    }
-
-    private void makePost() {
+    private void makePostDeleteUser(String token) {
 
         OkHttpClient client = new OkHttpClient();
 
-        String json = "{\"token\":\""+mUserInformation.getToken()+"\",\"latitude\":\"10\",\"longitude\":10}\"";
+        String json = "{\"token\":\""+token+"}\"";
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json"),json);
 
-
-
-        RequestBody formBody = new FormBody.Builder()
-                .add("token", mUserInformation.getToken())
-                .add("latitude", "20")
-                .add("longitude", "11")
-                .build();
-
         Request request = new Request.Builder()
-                .url("http://10.0.2.2:8080/saveUser")
-                .post(body)
+                .url(BASE_URL + "/deleteUser")
+                .delete(body)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -145,7 +108,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println("gayanders");
+                        System.out.println("Something went wrong");
                     }
                 });
             }
