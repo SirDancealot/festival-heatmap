@@ -6,7 +6,10 @@ import java.util.Scanner;
 
 public class AdminPanel {
 
+    private static final String URL = "http://dist.saluton.dk:18512";
+
     public static void main(String[] args) {
+
 
         String email;
         HttpResponse response;
@@ -32,14 +35,14 @@ public class AdminPanel {
             switch (choice) {
 
                 case 1:
-                    System.out.println(Unirest.get("http://localhost:8080/javaboglogin_getAllEmails").asJson().getBody().toString());
+                    System.out.println(Unirest.get(URL+"/javaboglogin_getAllEmails").asJson().getBody().toString());
                     break;
 
                 case 2:
                     System.out.println("Indast email på den bruger du vil slette");
                     email = scan.next();
 
-                    response = Unirest.delete("http://localhost:8080/javaboglogin_deleteUser").field("email",email).asEmpty();
+                    response = Unirest.delete(URL+"/javaboglogin_deleteUser").field("email",email).asEmpty();
                     if (response.getStatus() == 200)
                         System.out.println("Bruger slettet");
                     else System.out.println("Der skete en fejl, prøv igen");
@@ -53,7 +56,7 @@ public class AdminPanel {
                     System.out.println("Indtast ny longitude");
                     String longitude = scan.next();
 
-                    response = Unirest.post("http://localhost:8080/javaboglogin_updateUser")
+                    response = Unirest.post(URL+"/javaboglogin_updateUser")
                             .field("email",email)
                             .field("latitude", latitude)
                             .field("longitude",longitude).asEmpty();
@@ -84,8 +87,7 @@ public class AdminPanel {
             System.out.print("Kodeord:");
             String password = scan.nextLine();
 
-            String URL = "http://localhost:8080";
-            HttpResponse response = Unirest.post(URL +"/javaboglogin").field("name",username).field("password", password).asEmpty();
+            HttpResponse response = Unirest.post( URL+"/javaboglogin").field("name",username).field("password", password).asEmpty();
 
             if(response.getStatus() == 200){
                 loggedIn = true;
