@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/festival-web-page",
+    "public": "dist/festival-website",
     "ignore": [
       "firebase.json",
       "**/.*",
