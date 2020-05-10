@@ -3,6 +3,7 @@ package com.example.festival_app;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 
@@ -83,9 +84,6 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference();
-
         new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
     }
 
@@ -124,7 +122,6 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
         LatLngBounds bound = new LatLngBounds(ne,sw);
 
         mMap.setLatLngBoundsForCameraTarget(bound);
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center, zoom));
 
     }
@@ -138,7 +135,21 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         } else if(view.getId() == setLocation.getId()){
 
-            makePostSaveUser(mUserInformation.getToken(),""+mMark.getPosition().latitude,""+mMark.getPosition().longitude);
+            if(mMark != null) {
+                makePostSaveUser(mUserInformation.getToken(), "" + mMark.getPosition().latitude, "" + mMark.getPosition().longitude);
+            }
+
+            CountDownTimer time = new CountDownTimer(500,500) {
+                @Override
+                public void onTick(long l) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
+                }
+            }.start();
 
         }
 
@@ -229,6 +240,8 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
             super.onPostExecute(s);
 
             mProvider = new HeatmapTileProvider.Builder().data(s).build();
+
+            mMap.clear();
 
             mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
 
