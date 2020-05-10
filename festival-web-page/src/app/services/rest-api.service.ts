@@ -8,7 +8,7 @@ import {Observable, observable} from 'rxjs';
 })
 export class RestApiService {
 
-  url = 'http://localhost:8080';
+  url = 'http://dist.saluton.dk:18512';
 
   constructor(private http: HttpClient) {
   }
