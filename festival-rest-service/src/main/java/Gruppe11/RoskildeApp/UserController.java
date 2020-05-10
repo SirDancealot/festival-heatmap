@@ -136,14 +136,12 @@ public class UserController {
     @GetMapping("/userCoor")
     public Coordinates userCoor(@RequestParam("token") String token) {
         FirebaseService firebaseService = FirebaseService.getInstance();
-        System.out.println(token);
         Coordinates coordinates = null;
         try {
             FirebaseToken dToken = FirebaseAuth.getInstance().verifyIdToken(token);
 
             if(firebaseService.getUserDetails(dToken.getEmail())) {
                 coordinates = firebaseService.getUserCoordinates(new User(dToken.getEmail()));
-                System.out.println(coordinates);
             }
         } catch (FirebaseAuthException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
