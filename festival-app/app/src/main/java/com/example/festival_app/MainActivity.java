@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onSuccess(LoginResult loginResult) {
                 mAccessToken = loginResult.getAccessToken();
                 handleFacebookAccessToken(loginResult.getAccessToken());
+                startActivity(new Intent(getApplicationContext(), HeatMapActivity.class));
             }
 
             @Override
