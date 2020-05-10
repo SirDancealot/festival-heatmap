@@ -24,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;*/
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.Response;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -54,7 +55,6 @@ public class UserController {
         }
     }
 
-
     @CrossOrigin
     @ResponseBody
     @PostMapping ("/saveUser")
@@ -79,6 +79,7 @@ public class UserController {
 
     }
 
+    @CrossOrigin
     @GetMapping("/allGeolocs")
     public ArrayList<String> showUser() throws ExecutionException, InterruptedException {
         FirebaseService firebaseService = FirebaseService.getInstance();
@@ -98,47 +99,74 @@ public class UserController {
         return geoPoints;
     }
 
-    /**
-     * Updates a users geohash
-     * @param email
-     * @param latitude
-     * @param longitude
-     * @return HTTP statuscode
-     */
     @CrossOrigin
-    @PostMapping("/updateUser")
-    public Object updateUserLoc(@RequestParam("email") String email, @RequestParam ("latitude") Double latitude, @RequestParam("longitude") Double longitude) throws ExecutionException, InterruptedException {
+    @ResponseBody
+    @PostMapping ("/updateUser")
+    public Object updateUserLoc(@RequestBody SaveObject obj) {
         FirebaseService firebaseService = FirebaseService.getInstance();
-        if(firebaseService.getUserDetails(email)) {
-            try {
-                firebaseService.saveUserDetails(new User(email, new GeoPoint(latitude, longitude)));
-            } catch (Exception e) {
-                e.printStackTrace();
-                return new ResponseEntity(HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity(HttpStatus.OK);
-        }
-        return new ResponseEntity(HttpStatus.NOT_FOUND);
-    }
+        String token = obj.getToken();
+        Double latitude = obj.getLatitude();
+        Double longitude = obj.getLongitude();
 
-    /**
-     * Delete user upon given email
-     * @param email
-     * @return HTTP statuscode
-     */
-    @DeleteMapping("/deleteUser")
-    public Object deleteUser(@RequestParam ("email") String email){
-        FirebaseService firebaseService = FirebaseService.getInstance();
         try {
-            firebaseService.deleteUser(new User(email));
-        } catch (ExecutionException e) {
+            FirebaseToken dToken = FirebaseAuth.getInstance().verifyIdToken(token);
+
+            if(firebaseService.getUserDetails(dToken.getEmail())) {
+                firebaseService.saveUserDetails(new User(dToken.getEmail(), new GeoPoint(latitude,longitude)));
+            }
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.NOT_FOUND);
-        } catch (InterruptedException e) {
+        } catch (FirebaseAuthException e) {
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @CrossOrigin
+    @ResponseBody
+    @DeleteMapping("/deleteUser")
+    public Object deleteUser(@RequestBody SaveObject obj){
+        FirebaseService firebaseService = FirebaseService.getInstance();
+        String token = obj.getToken();
+
+        try {
+            FirebaseToken dToken = FirebaseAuth.getInstance().verifyIdToken(token);
+
+            if(firebaseService.getUserDetails(dToken.getEmail())) {
+                firebaseService.deleteUser(new User(dToken.getEmail()));
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        } catch (FirebaseAuthException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    /*
+    //todo: use token to give back coordinates for user
+    @CrossOrigin
+    @ResponseBody
+    @GetMapping("/userCoor")
+    public Coordinates userCoor(@RequestBody SaveObject obj) {
+        FirebaseService firebaseService = FirebaseService.getInstance();
+        String token = obj.getToken();
+
+        try {
+            FirebaseToken dToken = FirebaseAuth.getInstance().verifyIdToken(token);
+
+            if(firebaseService.getUserDetails(dToken.getEmail())) {
+                firebaseService.getUserCoordinates(new User(dToken.getEmail()));
+            }
+        } catch (FirebaseAuthException e) {
+            e.printStackTrace();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }*/
 }
 

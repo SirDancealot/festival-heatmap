@@ -1,5 +1,6 @@
 package Service;
 
+import Objects.Coordinates;
 import Objects.User;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
@@ -57,5 +58,15 @@ public class FirebaseService {
         return geoPoints;
     }
 
+/*
+    public Coordinates getUserCoordinates(User user) {
+        Firestore db = FirestoreClient.getFirestore();
+        DocumentSnapshot dab1 = db.collection("coordinates").document(user.getEmail()).get("")
+        CollectionReference col = db.collection("coordinates");
+        DocumentSnapshot dab = col.document(user.getEmail())
+        ApiFuture<DocumentSnapshot> future = col.document(user.getEmail()).get();
 
+
+        return null;
+    }*/
 }
