@@ -1,5 +1,8 @@
 package Objects;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class SaveObject  {
     String token;
     Double latitude, longitude;
