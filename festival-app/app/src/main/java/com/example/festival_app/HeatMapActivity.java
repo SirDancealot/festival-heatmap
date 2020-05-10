@@ -87,17 +87,6 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
 
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
         new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
     }
 
