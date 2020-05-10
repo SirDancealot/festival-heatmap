@@ -1,6 +1,7 @@
 package Gruppe11.RoskildeApp;
 
 import Objects.Coordinates;
+import Objects.SaveObject;
 import Objects.User;
 import Service.FirebaseService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -54,10 +55,13 @@ public class UserController {
     }
 
 
+    @CrossOrigin
     @ResponseBody
     @PostMapping ("/saveUser")
-    public Object createUser(@RequestParam("token") String token, @RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude) throws ExecutionException, InterruptedException {
-
+    public Object createUser(@RequestBody SaveObject obj) throws ExecutionException, InterruptedException {
+        String token = obj.getToken();
+        Double latitude = obj.getLatitude();
+        Double longitude = obj.getLongitude();
 
         try {
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
@@ -81,6 +85,7 @@ public class UserController {
         return firebaseService.getGeoPoints();
     }
 
+    @CrossOrigin
     @GetMapping("/locationSeperate")
     public ArrayList<Coordinates> getCoordinates() throws ExecutionException, InterruptedException, InvalidProtocolBufferException {
         FirebaseService firebaseService = FirebaseService.getInstance();
@@ -100,6 +105,7 @@ public class UserController {
      * @param longitude
      * @return HTTP statuscode
      */
+    @CrossOrigin
     @PostMapping("/updateUser")
     public Object updateUserLoc(@RequestParam("email") String email, @RequestParam ("latitude") Double latitude, @RequestParam("longitude") Double longitude) throws ExecutionException, InterruptedException {
         FirebaseService firebaseService = FirebaseService.getInstance();
