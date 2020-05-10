@@ -36,8 +36,8 @@ import java.util.regex.Pattern;
 @RestController
 public class UserController {
 
-    @PostMapping ("/logintest")
-    public Object test(@RequestParam ("token") String token) throws ExecutionException, InterruptedException {
+    @PostMapping("/logintest")
+    public Object test(@RequestParam("token") String token) throws ExecutionException, InterruptedException {
         try {
 
             // Validate en token
@@ -57,7 +57,7 @@ public class UserController {
 
     @CrossOrigin
     @ResponseBody
-    @PostMapping ("/saveUser")
+    @PostMapping("/saveUser")
     public Object createUser(@RequestBody SaveObject obj) throws ExecutionException, InterruptedException {
         String token = obj.getToken();
         Double latitude = obj.getLatitude();
@@ -66,7 +66,7 @@ public class UserController {
         try {
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
 
-            User user = new User(decodedToken.getEmail(),new GeoPoint(latitude,longitude));
+            User user = new User(decodedToken.getEmail(), new GeoPoint(latitude, longitude));
             FirebaseService firebaseService = FirebaseService.getInstance();
             firebaseService.saveUserDetails(user);
 
@@ -93,13 +93,14 @@ public class UserController {
         ArrayList<String> geohash = firebaseService.getGeoPoints();
         for (int i = 0; i < geohash.size(); i++) {
             double[] d = GeoHashUtils.decode(geohash.get(i));
-            geoPoints.add(new Coordinates(d[0],d[1]));
+            geoPoints.add(new Coordinates(d[0], d[1]));
         }
         return geoPoints;
     }
 
     /**
      * Updates a users geohash
+     *
      * @param email
      * @param latitude
      * @param longitude
@@ -107,9 +108,9 @@ public class UserController {
      */
     @CrossOrigin
     @PostMapping("/updateUser")
-    public Object updateUserLoc(@RequestParam("email") String email, @RequestParam ("latitude") Double latitude, @RequestParam("longitude") Double longitude) throws ExecutionException, InterruptedException {
+    public Object updateUserLoc(@RequestParam("email") String email, @RequestParam("latitude") Double latitude, @RequestParam("longitude") Double longitude) throws ExecutionException, InterruptedException {
         FirebaseService firebaseService = FirebaseService.getInstance();
-        if(firebaseService.getUserDetails(email)) {
+        if (firebaseService.getUserDetails(email)) {
             try {
                 firebaseService.saveUserDetails(new User(email, new GeoPoint(latitude, longitude)));
             } catch (Exception e) {
@@ -123,11 +124,13 @@ public class UserController {
 
     /**
      * Delete user upon given email
+     *
      * @param email
      * @return HTTP statuscode
      */
+    @CrossOrigin
     @DeleteMapping("/deleteUser")
-    public Object deleteUser(@RequestParam ("email") String email){
+    public Object deleteUser(@RequestParam("email") String email) {
         FirebaseService firebaseService = FirebaseService.getInstance();
         try {
             firebaseService.deleteUser(new User(email));
@@ -141,4 +144,3 @@ public class UserController {
         return new ResponseEntity(HttpStatus.OK);
     }
 }
-
