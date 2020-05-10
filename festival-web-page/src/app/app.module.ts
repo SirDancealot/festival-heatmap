@@ -4,7 +4,6 @@ import { HttpClientModule} from '@angular/common/http';
 import { AppComponent } from './app.component';
 import {FormsModule} from '@angular/forms';
 import { LoginComponent } from './login/login.component';
-import { HeatmapComponent } from './heatmap/heatmap.component';
 import {RouterModule, Routes} from '@angular/router';
 import { MapComponent } from './map/map.component';
 import { GoogleMapsModule } from '@angular/google-maps';
@@ -29,16 +28,14 @@ import {AgmCoreModule} from '@agm/core';
 
 const appRoutes: Routes = [
   { path: 'map', component: MapComponent },
-  { path: 'heatmap', component: HeatmapComponent},
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    HeatmapComponent,
     MapComponent,
-    ProtectedComponent
+    ProtectedComponent,
   ],
     imports: [
         BrowserModule,
