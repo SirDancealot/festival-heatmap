@@ -132,7 +132,13 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         } else if(view.getId() == setLocation.getId()){
 
-            makePostSaveUser(mUserInformation.getToken(),""+mMark.getPosition().latitude,""+mMark.getPosition().longitude);
+            if(mMark != null) {
+                makePostSaveUser(mUserInformation.getToken(), "" + mMark.getPosition().latitude, "" + mMark.getPosition().longitude);
+            }
+
+            mMap.clear();
+
+            new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
 
         }
 
