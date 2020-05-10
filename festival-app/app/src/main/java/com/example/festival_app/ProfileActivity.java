@@ -91,8 +91,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private void makePostDelete() throws IOException{
 
-
-
     }
 }
 
