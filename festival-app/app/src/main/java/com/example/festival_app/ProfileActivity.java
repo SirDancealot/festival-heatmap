@@ -8,17 +8,31 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button logout, back, delete;
     private FirebaseAuth mAuth;
     private UserInformation mUserInformation;
+
+    String BASE_URL = "10.0.2.2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +77,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         if(view.getId()==delete.getId()){
 
-            //TODO delete location
+            makePostDeleteUser(mUserInformation.getToken());
 
         } else if(view.getId()==logout.getId()){
            FirebaseAuth.getInstance().signOut();
+            LoginManager.getInstance().logOut();
             startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+            finishAffinity();
 
 
         }else if(view.getId()==back.getId()){
@@ -75,6 +91,42 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(new Intent(ProfileActivity.this, HeatMapActivity.class));
 
         }
+    }
+
+    private void makePostDeleteUser(String token) {
+
+        OkHttpClient client = new OkHttpClient();
+
+        String json = "{\"token\":\""+token+"}\"";
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"),json);
+
+        HttpUrl uu = new HttpUrl.Builder()
+                .scheme("http")
+                .host(BASE_URL)
+                .port(8080)
+                .addPathSegments("deleteUser")
+                .addQueryParameter("token", token)
+                .build();
+
+        Request req = new Request.Builder().url(uu).delete(body).build();
+
+        client.newCall(req).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("Something went wrong");
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println(response.body().string());
+            }
+        });
     }
 }
 
