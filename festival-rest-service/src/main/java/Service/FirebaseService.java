@@ -1,9 +1,11 @@
 package Service;
 
+import Objects.Coordinates;
 import Objects.User;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import org.elasticsearch.index.search.geo.GeoHashUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -57,5 +59,17 @@ public class FirebaseService {
         return geoPoints;
     }
 
-
+    public Coordinates getUserCoordinates(User user) throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        DocumentReference docRef = db.collection("coordinates").document(user.getEmail());
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        DocumentSnapshot document = future.get();
+        if(document.exists()) {
+            String g = document.getString("g");
+            double[] d = GeoHashUtils.decode(g);
+            return new Coordinates(d[0], d[1]);
+        } else {
+            return null;
+        }
+    }
 }

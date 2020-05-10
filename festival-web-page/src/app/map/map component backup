@@ -1,0 +1,6 @@
+<div class="map">
+  <hr>
+  <img src="https://www.roskilde-festival.dk/media/2685/map2019-web-teaser.jpg?focal=0.5,0.5&mode=crop&width=1200&height=630&quality=80" alt="Roskildekort" usemap="#kort">
+  <map name="kort">
+  </map>
+</div>
