@@ -8,6 +8,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -79,7 +80,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         } else if(view.getId()==logout.getId()){
            FirebaseAuth.getInstance().signOut();
+            LoginManager.getInstance().logOut();
             startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+            finishAffinity();
 
 
         }else if(view.getId()==back.getId()){
