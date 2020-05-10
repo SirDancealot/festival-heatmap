@@ -148,4 +148,36 @@ public class UserController {
         return coordinates;
         //hey
     }
+
+    @PostMapping("/populateDatabase")
+    public void populateDatabase(){
+        FirebaseService firebaseService = FirebaseService.getInstance();
+
+        for (int i = 0; i < 100 ; i++) {
+            try {
+                firebaseService.saveUserDetails(new User("mail@mail"+i+".com", new GeoPoint(55.61778630862919,12.08245273679495)));
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @DeleteMapping("/deleteTestData")
+    public void deleteTestUsersInDatabase(){
+        FirebaseService firebaseService = FirebaseService.getInstance();
+
+
+        for (int i = 0; i < 100 ; i++) {
+            try {
+
+                firebaseService.deleteUser(new User("mail@mail"+i+".com", new GeoPoint(55.61,12.08)));
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
