@@ -9,27 +9,29 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.net.HttpURLConnection;
-
-import okhttp3.Call;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button logout, back, delete;
     private FirebaseAuth mAuth;
     private UserInformation mUserInformation;
-
-    UserInformation user;
 
     String BASE_URL = "http://10.0.2.2:8080";
 
@@ -76,7 +78,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         if(view.getId()==delete.getId()){
 
-            new JsonTask().execute();
+            makePost();
 
             //TODO instert email of user to be deleted
 
@@ -101,7 +103,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             OkHttpClient client = new OkHttpClient();
 
             RequestBody fromBody = new FormBody.Builder()
-                    .add("token",user.getToken())
+                    .add("token", mUserInformation.getToken())
                     .build();
 
             Request request = new Request.Builder()
@@ -116,5 +118,43 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    private void makePost() {
+
+        OkHttpClient client = new OkHttpClient();
+
+        String json = "{\"token\":\""+mUserInformation.getToken()+"\",\"latitude\":\"10\",\"longitude\":10}\"";
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"),json);
+
+
+
+        RequestBody formBody = new FormBody.Builder()
+                .add("token", mUserInformation.getToken())
+                .add("latitude", "20")
+                .add("longitude", "11")
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://10.0.2.2:8080/saveUser")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("gayanders");
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println(response.body().string());
+            }
+        });
+    }
 }
 
