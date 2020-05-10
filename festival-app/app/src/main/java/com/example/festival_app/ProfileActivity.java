@@ -8,14 +8,21 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+
+import okhttp3.Call;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button logout, back, delete;
 
-    String URL = "";
+    UserInformation user;
+
+    String BASE_URL = "http://10.0.2.2:8080";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +38,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         back = findViewById(R.id.button_back);
         back.setOnClickListener(this);
 
+        user = UserInformation.getInstance();
+
     }
 
 
@@ -39,7 +48,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         if(view.getId()==delete.getId()){
 
-            new JsonTask().execute("http://10.0.2.2:8080/deleteUser");
+            new JsonTask().execute();
 
             //TODO instert email of user to be deleted
 
@@ -56,32 +65,34 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    public class JsonTask extends AsyncTask<String,String, Void> {
+    public class JsonTask extends AsyncTask<String, String, Void> {
 
         @Override
         protected Void doInBackground(String... strings) {
             HttpURLConnection connection = null;
 
+            OkHttpClient client = new OkHttpClient();
 
-            try {
-                URL url = new URL(strings[0]);
-                connection = (HttpURLConnection) url.openConnection();
+            RequestBody fromBody = new FormBody.Builder()
+                    .add("token",user.getToken())
+                    .build();
 
-                connection.connect();
+            Request request = new Request.Builder()
+                    .url(BASE_URL+"/deleteUser")
+                    .post(fromBody)
+                    .build();
 
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if(connection!=null){
-                    connection.disconnect();
-                }
-            }
+            Call call = client.newCall(request);
+
 
             return null;
-
         }
+    }
+
+    private void makePostDelete() throws IOException{
+
+
+
     }
 }
 
