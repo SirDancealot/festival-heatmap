@@ -16,7 +16,7 @@ public class FirebaseInit {
     public void init() {
         FileInputStream serviceAccount = null;
         try {
-            serviceAccount = new FileInputStream("./serviceKey.json");
+            serviceAccount = new FileInputStream("serviceKey.json");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
