@@ -72,4 +72,19 @@ public class FirebaseService {
             return null;
         }
     }
+
+    public ArrayList<String> getAllUsers() throws ExecutionException, InterruptedException {
+
+        ArrayList<String> users = new ArrayList<>();
+        Firestore db = FirestoreClient.getFirestore();
+
+        ApiFuture<QuerySnapshot> future = db.collection("coordinates").get();
+
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+
+        for (QueryDocumentSnapshot document: documents) {
+            users.add(document.getString("email"));
+        }
+        return users;
+    }
 }
