@@ -32,7 +32,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private FirebaseAuth mAuth;
     private UserInformation mUserInformation;
 
-    String BASE_URL = "10.0.2.2";
+    String BASE_URL = "dist.saluton.dk";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +58,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null){
-            mUserInformation.setUserEmail(currentUser.getEmail());
-
             currentUser.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                 @Override
                 public void onComplete(@NonNull Task<GetTokenResult> task) {
@@ -104,7 +102,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         HttpUrl uu = new HttpUrl.Builder()
                 .scheme("http")
                 .host(BASE_URL)
-                .port(8080)
+                .port(18512)
                 .addPathSegments("deleteUser")
                 .addQueryParameter("token", token)
                 .build();

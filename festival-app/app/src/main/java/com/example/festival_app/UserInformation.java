@@ -10,6 +10,8 @@ public class UserInformation {
     private String access_type;
     private String token;
 
+    private UserInformation() {}
+
     public String getUserEmail() {
         return userEmail;
     }
