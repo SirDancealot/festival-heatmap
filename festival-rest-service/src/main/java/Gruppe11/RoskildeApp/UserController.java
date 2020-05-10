@@ -4,35 +4,18 @@ import Objects.Coordinates;
 import Objects.SaveObject;
 import Objects.User;
 import Service.FirebaseService;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.cloud.firestore.GeoPoint;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.type.LatLng;
 import org.elasticsearch.index.search.geo.GeoHashUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-/*import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;*/
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.concurrent.ExecutionException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @RestController
 public class UserController {
@@ -148,25 +131,23 @@ public class UserController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    /*
-    //todo: use token to give back coordinates for user
     @CrossOrigin
     @ResponseBody
     @GetMapping("/userCoor")
-    public Coordinates userCoor(@RequestBody SaveObject obj) {
+    public Coordinates userCoor(@RequestParam("token") String token) {
         FirebaseService firebaseService = FirebaseService.getInstance();
-        String token = obj.getToken();
-
+        System.out.println(token);
+        Coordinates coordinates = null;
         try {
             FirebaseToken dToken = FirebaseAuth.getInstance().verifyIdToken(token);
 
             if(firebaseService.getUserDetails(dToken.getEmail())) {
-                firebaseService.getUserCoordinates(new User(dToken.getEmail()));
+                coordinates = firebaseService.getUserCoordinates(new User(dToken.getEmail()));
+                System.out.println(coordinates);
             }
-        } catch (FirebaseAuthException e) {
-            e.printStackTrace();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (FirebaseAuthException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-    }*/
+        return coordinates;
+    }
 }
