@@ -19,6 +19,7 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -100,12 +101,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json"),json);
 
-        Request request = new Request.Builder()
-                .url(BASE_URL + "/deleteUser")
-                .delete(body)
-                .build();
+        HttpUrl uu = new HttpUrl.Builder().scheme("http").host("10.0.2.2").port(8080).addPathSegments("deleteUser").addQueryParameter("token", token).build();
+        System.out.println(uu);
 
-        client.newCall(request).enqueue(new Callback() {
+        Request req = new Request.Builder().url(uu).delete(body).build();
+
+        client.newCall(req).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(new Runnable() {
