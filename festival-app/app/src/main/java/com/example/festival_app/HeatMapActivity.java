@@ -70,8 +70,6 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
-
     }
 
     protected void onStart() {
@@ -219,6 +217,12 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
             mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
     }
 }
 

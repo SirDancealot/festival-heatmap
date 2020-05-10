@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         signInButton = findViewById(R.id.sign_in_button);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
+        signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setOnClickListener(this);
 
         mCallbackManager = CallbackManager.Factory.create();
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onSuccess(LoginResult loginResult) {
                 mAccessToken = loginResult.getAccessToken();
-                handleFacebookAccessToken(loginResult.getAccessToken());
+                handleFacebookAccessToken(mAccessToken);
                 startActivity(new Intent(getApplicationContext(), HeatMapActivity.class));
             }
 
