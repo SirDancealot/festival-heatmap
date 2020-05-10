@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,6 +19,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
 import org.json.JSONArray;
@@ -41,6 +47,8 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
     HeatmapTileProvider mProvider;
     TileOverlay mOverlay;
     SupportMapFragment mapFragment;
+    private FirebaseAuth mAuth;
+    private UserInformation mUserInformation;
 
     private Marker mMark;
 
@@ -50,6 +58,9 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        mAuth = FirebaseAuth.getInstance();
+        mUserInformation = UserInformation.getInstance();
 
         profile = findViewById(R.id.button_profile);
         profile.setOnClickListener(this);
@@ -61,6 +72,24 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
 
+    }
+
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null){
+            mUserInformation.setUserEmail(currentUser.getEmail());
+
+           currentUser.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                @Override
+                public void onComplete(@NonNull Task<GetTokenResult> task) {
+                    if (task.isSuccessful()){
+                        mUserInformation.setToken(task.getResult().getToken());
+                    }else
+                        task.getException().printStackTrace();
+                }
+            });
+        }
     }
 
 
