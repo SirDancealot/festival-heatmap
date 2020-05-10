@@ -111,9 +111,8 @@ public class UserController {
     @CrossOrigin
     @ResponseBody
     @DeleteMapping("/deleteUser")
-    public Object deleteUser(@RequestBody SaveObject obj){
+    public Object deleteUser(@RequestParam("token") String token){
         FirebaseService firebaseService = FirebaseService.getInstance();
-        String token = obj.getToken();
 
         try {
             FirebaseToken dToken = FirebaseAuth.getInstance().verifyIdToken(token);
