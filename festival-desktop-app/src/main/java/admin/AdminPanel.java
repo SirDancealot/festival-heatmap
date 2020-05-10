@@ -22,16 +22,20 @@ public class AdminPanel {
         }while (!loggedIn);
 
         while (active) {
-
-            System.out.println("Tast 1 for at slettee en bruger");
-            System.out.println("Tast 2 for at opdatere en bruger");
-            System.out.println("Tast 3 for at afslutte");
+            System.out.println("Tast 1 for at vise alle mails i database");
+            System.out.println("Tast 2 for at slettee en bruger");
+            System.out.println("Tast 3 for at opdatere en bruger");
+            System.out.println("Tast 4 for at afslutte");
 
             int choice = scan.nextInt();
 
             switch (choice) {
 
                 case 1:
+                    System.out.println(Unirest.get("http://localhost:8080/javaboglogin_getAllEmails").asJson().getBody().toString());
+                    break;
+
+                case 2:
                     System.out.println("Indast email på den bruger du vil slette");
                     email = scan.next();
 
@@ -41,7 +45,7 @@ public class AdminPanel {
                     else System.out.println("Der skete en fejl, prøv igen");
                     break;
 
-                case 2:
+                case 3:
                     System.out.println("Indtast en email for den bruger du vil opdatere");
                     email = scan.next();
                     System.out.println("Indtast ny latitude");
@@ -58,7 +62,7 @@ public class AdminPanel {
                     else System.out.println("Der skete en fejl, prøv igen");
                     break;
 
-                case 3:
+                case 4:
                     active = false;
                     System.out.println("Afslutter program");
                     break;

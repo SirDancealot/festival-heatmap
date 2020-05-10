@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -59,5 +60,16 @@ public class JavaBogUserController {
         }
 
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/javaboglogin_getAllEmails")
+    public Object getAllEntries(){
+        FirebaseService firebaseService = FirebaseService.getInstance();
+        try {
+            return firebaseService.getAllUsers();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 }
