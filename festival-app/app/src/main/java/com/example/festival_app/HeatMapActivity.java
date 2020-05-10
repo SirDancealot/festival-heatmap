@@ -3,6 +3,7 @@ package com.example.festival_app;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 
@@ -24,6 +25,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
 import org.json.JSONArray;
@@ -78,8 +84,10 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference();
 
+        new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
     }
 
     protected void onStart() {
@@ -99,7 +107,6 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
             });
         }
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -132,7 +139,22 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         } else if(view.getId() == setLocation.getId()){
 
-            makePostSaveUser(mUserInformation.getToken(),""+mMark.getPosition().latitude,""+mMark.getPosition().longitude);
+            if(mMark != null) {
+                makePostSaveUser(mUserInformation.getToken(), "" + mMark.getPosition().latitude, "" + mMark.getPosition().longitude);
+            }
+
+            CountDownTimer time = new CountDownTimer(500,500) {
+                @Override
+                public void onTick(long l) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
+                }
+            }.start();
+
 
         }
 
@@ -223,6 +245,8 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
             super.onPostExecute(s);
 
             mProvider = new HeatmapTileProvider.Builder().data(s).build();
+
+            mMap.clear();
 
             mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
 

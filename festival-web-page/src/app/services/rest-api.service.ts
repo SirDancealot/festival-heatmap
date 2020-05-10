@@ -28,9 +28,15 @@ export class RestApiService {
   }
 
   public onDeletePost(id: string): Observable<any> {
-    const params = new HttpParams().set('email', id);
+    const params = new HttpParams().set('token', id);
 
     return this.http.delete(this.url + '/deleteUser', { params });
+  }
+
+  public getPrevPosition(id: string) {
+    const params = new HttpParams().set('token', id);
+
+    return this.http.get<any>(this.url + '/userCoor', {params});
   }
 }
 
