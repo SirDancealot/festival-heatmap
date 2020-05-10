@@ -66,10 +66,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             //TODO delete location
 
         } else if(view.getId()==logout.getId()){
-
+           FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(ProfileActivity.this, MainActivity.class));
 
-            //TODO clear userclass
 
         }else if(view.getId()==back.getId()){
 
