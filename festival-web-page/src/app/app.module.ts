@@ -26,9 +26,6 @@ import { AuthGuardService } from './services/auth-guard.service';
 import {AgmCoreModule} from '@agm/core';
 // OAuth2 Imports end
 
-const appRoutes: Routes = [
-  { path: 'map', component: MapComponent },
-];
 
 @NgModule({
   declarations: [
@@ -40,7 +37,6 @@ const appRoutes: Routes = [
     imports: [
         BrowserModule,
         FormsModule,
-        RouterModule.forRoot(appRoutes),
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireAuthModule,
         AppRouting,
