@@ -14,6 +14,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -56,7 +60,7 @@ import okhttp3.Response;
 
 public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnMapClickListener {
 
-     private GoogleMap mMap;
+    private GoogleMap mMap;
 
     HeatmapTileProvider mProvider;
     TileOverlay mOverlay;
@@ -82,19 +86,16 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
         setLocation.setOnClickListener(this);
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+
         mapFragment.getMapAsync(this);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference();
-
-        new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
+        new JsonTask().execute("http://dist.saluton.dk:18512/locationSeperate");
     }
 
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null){
-            mUserInformation.setUserEmail(currentUser.getEmail());
 
            currentUser.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                 @Override
@@ -110,7 +111,6 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         mMap = googleMap;
 
         mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
@@ -121,7 +121,6 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         LatLng ne = new LatLng(55.610050, 12.060702);
         LatLng sw = new LatLng(55.624021, 12.096797);
-
         LatLngBounds bound = new LatLngBounds(ne,sw);
 
         mMap.setLatLngBoundsForCameraTarget(bound);
@@ -151,7 +150,7 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
 
                 @Override
                 public void onFinish() {
-                    new JsonTask().execute("http://10.0.2.2:8080/locationSeperate");
+                    new JsonTask().execute("http://dist.saluton.dk:18512/locationSeperate");
                 }
             }.start();
 
@@ -268,7 +267,7 @@ public class HeatMapActivity extends FragmentActivity implements OnMapReadyCallb
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
 
         Request request = new Request.Builder()
-                .url("http://10.0.2.2:8080/saveUser")
+                .url("http://dist.saluton.dk:18512/saveUser")
                 .post(body)
                 .build();
 

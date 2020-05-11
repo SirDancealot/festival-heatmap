@@ -1,5 +1,6 @@
 package Objects;
 
+
 public class RequestUser {
     String name;
     int latitude, longitude;

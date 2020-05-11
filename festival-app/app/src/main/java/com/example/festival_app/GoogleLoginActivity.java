@@ -24,7 +24,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class GoogleLoginActivity extends AppCompatActivity {
 
-    GoogleSignInAccount account;
     private UserInformation mUserInformation;
     private FirebaseAuth mAuth;
     private Task<GoogleSignInAccount> loginTask;
@@ -34,14 +33,18 @@ public class GoogleLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_login);
 
+        // Singleton class to store user information across different activities
         mUserInformation = UserInformation.getInstance();
+
+        // Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
 
+        // Google Login-popup
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
-                .requestIdToken("323786655673-vk3o6dvpn0tf6savn5jkqjmi0qs788mu.apps.googleusercontent.com")
+                .requestIdToken(getString(R.string.google_client_id)) // client_id from obtained from Google developer console
+                                                                      // used get the client-secret which is used for hashing the access tokens
                 .build();
-
         GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         Intent intent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(intent,1);
@@ -53,17 +56,19 @@ public class GoogleLoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
             loginTask = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = loginTask.getResult(ApiException.class);
+
                 Log.d("SUCCESS", "firebaseAuthWithGoogle:" + account.getId());
+
+                // method used for validating the user and extracting the access token
                 firebaseAuthWithGoogle(account.getIdToken());
                 startActivity(new Intent(getApplicationContext(), HeatMapActivity.class));
+
             } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
+                // Google Sign In failed
                 Log.w("ERROR", "Google sign in failed", e);
                 // ...
             }
@@ -71,20 +76,21 @@ public class GoogleLoginActivity extends AppCompatActivity {
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
+
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                            // Sign in success
                             Log.d("SUCCESS", "signInWithCredential:success");
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                            mUserInformation.setUserEmail(firebaseUser.getEmail());
                             firebaseUser.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<GetTokenResult> task) {
                                     if (task.isSuccessful()){
+                                        // Save the users access token
                                         mUserInformation.setToken(task.getResult().getToken());
                                         System.out.println(task.getResult().getToken());
                                     }else {
