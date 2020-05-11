@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "roskildeapp-4670e",
+  "private_key_id": "046fd7c1e02dec1dfad22ceb461fd7a4b61db678",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCQ4Ata13J6ZhgH\nIcxaYHBDcRAoomb4G1LoyhDPk0YpJKmrlTLQuVSuq5ziZl3B0Okj1tzPPnPurzMR\n/zkc1/C84xcUnGPe7kuPayk6rbSdKv9eTRZ5vLXu387RJ4YGvL2gNdkIzKt99kuu\nDMu+g5JBaS90alZwfQKovrQiBzcX4KuVJE0sbS4I8YxnHkAlw32wKAAsxKa1RE1P\nk4L/cRbVh5kvVif1B9QE1CiMM9cA13QTzOzNkafZedU9BSEGF6YKzcH96cz6LNZx\nX+69JVjeWl6sM4GKhY4YYqUtJ1Oy1f2ZNvGMR+XgsApJY7Z6OUOd4YKnZXbL1n37\nTTwZAfh7AgMBAAECggEAGg/LyyA1zlH+YY4RcnKlz2QP+ZdZeamErS7ofkbqmK0p\nPp4c4ZJtauyhUNMEa8DWp+VXnIqKFXZ78/FbR1aLTpd1h/YoOyrX+elXpeAovRtG\njCLG98hcXCfzzwlSoXSjkiYNsHkNIqBDdgCESHXnwg+Xg1Q7z4mViGCiC/sLTKaP\nPWAmDkvw4726eGl/9qJFW7FZKdqFNabHGuk8Dze6I1NtPuq3+41ELSgZ7vVxNx+x\nxUQKYKhODc4HGtVYO9CBrvHUEX3x6ss6eBLV8Z3eyuywy8Zm92vx9S6dgVVKgfdM\ni46lyxrC+nAgrCROkYhMtFJ4EJhmfknE0LmgnSs+uQKBgQDAuPgR7NgkehJ3yEiU\n1pc+K7LkenKOdWQXEp6Z2no8cJEe+z6/mVWnHXHm0PsXBDQfIqn8pJnmLXMOzd+7\nIKoyEhydazFjYlD19H5t/Hl6T9wriwZsjydtF52aceJbPzkWuAIDUY6C7aYmXh/V\nK3rESe2fzs7JKAIfTjQkKJ4BqQKBgQDAcVSOZ3tupQ+QWFnTIVnIdYN5q+DgFPgB\nTjkVTSPnBSLvii2lLIQzj5kVUEVZ7bNZLVUbEuyDy30WTVlWR7vJhAgvIVFFlfdy\nwlwcrDh4lITfP4zNznQmV4nHmmM7liHCm/Sz/0e+Rm4LefuAgk61FDIndi4v/IbL\nIMgoPW+HgwKBgQC71EqqJbxuqK7RIVlj/lU/WZWryo9VuqHHPvVmm6FgwJEfsdzx\nHb919WOqgukFAKrP4ZfszHvV81vdBNdV6LsXu8E5x1xGMW8Yl6aVCWlXxPefVIr5\nSPgzAb4v5WioZ9D7DHGhzF3pyzaQ1FGQECVBo4+9nfC56o1O94gn6ZI9qQKBgBwQ\n6zoRkYjjfc+ZcxA9rvBzYwddr+A+bqUSGXUn2PKaZyv0RQ/v3CAA81yOZm7lIeEB\noYXfTqsyBD46basNry+GmAL3ovi5FGuiOPjdjSbY0kAU7p4dXAczgR6hP5OzI51U\nTW3q7zWq4+W8lpd5aa0zEtV6gOXyuF3rnAVyYE+tAoGBALrTSws3ezDn9oVqM442\nbeHzYA9NWvELzvaCqbgRmrA+mY/v0F7iC1UJy+6V5Q9+DeSE0B98+7B+nxES4rqh\ne+Ov3P8gxKQ1yUZ3HGUwVSNVli0vpODkt73RMqM8Ok3Upz+etADHtsbpJKPsmpck\nwhn92qUD0AqkUSY5AF2KJxn6\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-g81sh@roskildeapp-4670e.iam.gserviceaccount.com",
+  "client_id": "110765258868155351500",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-g81sh%40roskildeapp-4670e.iam.gserviceaccount.com"
+}
