@@ -29,7 +29,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### servicekey for Google cloud ###
-serviceKey.json
-/serviceAccountKey.json
